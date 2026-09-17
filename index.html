@@ -2,16 +2,122 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OneX</title>
+    <meta name="application-name" content="OneX" />
+    <meta name="apple-mobile-web-app-title" content="OneX" />
+    <meta
+      name="description"
+      content="Download releases and manage licenses for the OneX Governance platform."
+    />
+
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href="/" />
+
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#070a16"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta name="msapplication-TileColor" content="#070a16" />
+    <meta name="msapplication-TileImage" content="/apple-touch-icon.png" />
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="OneX" />
+    <meta property="og:title" content="OneX | Artifacts & Releases" />
+    <meta
+      property="og:description"
+      content="Download releases and manage licenses for the OneX Governance platform."
+    />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:secure_url" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image:alt"
+      content="OneX Artifacts & Releases"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="OneX | Artifacts & Releases" />
+    <meta
+      name="twitter:description"
+      content="Download releases and manage licenses for the OneX Governance platform."
+    />
+    <meta
+      name="twitter:image"
+      content="/og-image.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="OneX Artifacts & Releases"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "OneX",
+        "description": "Download releases and manage licenses for the OneX Governance platform.",
+        "applicationCategory": "BusinessApplication",
+        "image": "/og-image.png",
+        "publisher": {
+          "@type": "Organization",
+          "name": "OneX Intelligence, Inc.",
+          "url": "https://getonex.ai/"
+        }
+      }
+    </script>
+
+    <script>
+      try {
+        var origin = location.origin
+        var absolutize = function (value) {
+          if (!value) return value
+          if (value.charAt(0) === "/") return origin + value
+          return value
+        }
+        var canon = document.querySelector('link[rel="canonical"]')
+        if (canon) canon.setAttribute("href", origin + "/")
+        ;["og:url", "og:image", "og:image:secure_url"].forEach(function (prop) {
+          document
+            .querySelectorAll('meta[property="' + prop + '"]')
+            .forEach(function (el) {
+              el.setAttribute("content", absolutize(el.getAttribute("content")))
+            })
+        })
+        document
+          .querySelectorAll('meta[name="twitter:image"]')
+          .forEach(function (el) {
+            el.setAttribute("content", absolutize(el.getAttribute("content")))
+          })
+        var jsonLd = document.querySelector(
+          'script[type="application/ld+json"]',
+        )
+        if (jsonLd && jsonLd.textContent) {
+          var data = JSON.parse(jsonLd.textContent)
+          if (data.image) data.image = absolutize(data.image)
+          if (data.url) data.url = absolutize(data.url)
+          data.url = data.url || origin + "/"
+          jsonLd.textContent = JSON.stringify(data)
+        }
+      } catch (e) {}
+    </script>
+
     <link
       rel="stylesheet"
       href="https://assets.keygen.sh/fonts/owners/keygen.css"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#030a11" media="(prefers-color-scheme: dark)" />
-    <title>OneX</title>
     <script>
       try {
         var theme = localStorage.getItem("keygen.theme")
