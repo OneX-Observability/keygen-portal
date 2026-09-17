@@ -215,9 +215,9 @@ export default function SidebarPanel(): React.ReactElement {
       >
         <RailHeader className="flex flex-col items-center justify-center space-y-4 pt-6 pb-0">
           <img
-            src="/logomark.svg"
-            alt="Keygen Logomark"
-            className="h-5 md:h-4"
+            src="/logomark.png"
+            alt="OneX"
+            className="h-7 w-7 object-contain md:h-6 md:w-6"
           />
           <div
             className={cn(
