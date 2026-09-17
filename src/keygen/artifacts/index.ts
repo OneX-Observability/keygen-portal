@@ -1,5 +1,6 @@
 export { default as create } from "./create"
 export { default as get } from "./get"
+export { default as download } from "./download"
 export { default as list } from "./list"
 export { default as update } from "./update"
 export { default as remove } from "./remove"

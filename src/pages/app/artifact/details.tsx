@@ -57,6 +57,7 @@ import { useGetArtifact, useRemoveArtifact } from "@/queries/artifacts"
 import { useMobile } from "@/hooks/use-mobile"
 import { useSidebarTab } from "@/hooks/use-sidebar-tab"
 import { useBackNavigate } from "@/hooks/use-back-navigate"
+import { useDownloadArtifact } from "@/hooks/use-download-artifact"
 import { useBreadcrumbBackNavigate } from "@/hooks/use-breadcrumb-back-navigate"
 
 import { toast } from "@/lib/toast"
@@ -88,6 +89,7 @@ export default function ArtifactDetails() {
   const { id } = useParams({ from: "/$accountId/app/artifacts/$id" })
   const { data: artifact, isLoading, isFetching, isError } = useGetArtifact(id)
   const deleteArtifact = useRemoveArtifact(id)
+  const { download, isDownloading } = useDownloadArtifact()
 
   const releaseId = artifact?.relationships.release?.data?.id || ""
   const { data: release } = useGetRelease(releaseId)
@@ -110,6 +112,13 @@ export default function ArtifactDetails() {
   const toggleOpen = (key: keyof typeof open, value: boolean) => {
     setOpen((prev) => ({ ...prev, [key]: value }))
   }
+
+  const handleDownloadArtifact = () => {
+    if (!artifact) return
+    void download(artifact.id, artifact.links.redirect)
+  }
+
+  const canDownload = artifact?.attributes.status === ArtifactStatus.Uploaded
 
   const handleDeleteArtifact = () => {
     deleteArtifact.mutate(undefined, {
@@ -165,20 +174,18 @@ export default function ArtifactDetails() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mr-4 p-0">
-                {artifact?.attributes.status === ArtifactStatus.Uploaded &&
-                  artifact.links.redirect && (
-                    <>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          window.open(artifact.links.redirect, "_blank")
-                        }
-                        className="pb-2 text-base"
-                      >
-                        Download
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
+                {canDownload && (
+                  <>
+                    <DropdownMenuItem
+                      disabled={isDownloading}
+                      onClick={() => handleDownloadArtifact()}
+                      className="pb-2 text-base"
+                    >
+                      Download
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <Can permission="artifact.update">
                   <DropdownMenuItem
                     onClick={(e) => {
@@ -206,17 +213,9 @@ export default function ArtifactDetails() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-2">
-              {artifact?.attributes.status === ArtifactStatus.Uploaded &&
-                artifact.links.redirect && (
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      window.open(artifact.links.redirect, "_blank")
-                    }
-                  >
-                    Download
-                  </Button>
-                )}
+              {artifact && (
+                <Artifacts.DownloadButton artifact={artifact} />
+              )}
               <Can permission="artifact.update">
                 <Button
                   variant="outline"

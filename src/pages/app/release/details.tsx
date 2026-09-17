@@ -84,6 +84,7 @@ import { toast } from "@/lib/toast"
 import { copyToClipboard } from "@/lib/clipboard"
 
 import * as Releases from "@/components/releases"
+import * as Artifacts from "@/components/artifacts"
 import * as Property from "@/components/property"
 import * as Attribute from "@/components/attribute"
 import * as EventLogs from "@/components/event-logs"
@@ -148,7 +149,7 @@ function ConstraintRow({ constraint }: { constraint: ReleaseConstraint }) {
 function ArtifactRow({ artifact }: { artifact: Artifact }) {
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <GoToButton
           path="/$accountId/app/artifacts/$id"
           params={{
@@ -156,6 +157,11 @@ function ArtifactRow({ artifact }: { artifact: Artifact }) {
             id: artifact.id,
           }}
           label={artifact.attributes.filename}
+        />
+        <Artifacts.DownloadButton
+          artifact={artifact}
+          size="sm"
+          variant="outline"
         />
       </div>
     </div>

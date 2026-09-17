@@ -6,3 +6,4 @@ export { Dialog }
 
 export { default as Attributes } from "./attributes"
 export { default as FilterBar } from "./filter-bar"
+export { default as DownloadButton } from "./download-button"

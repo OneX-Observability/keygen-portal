@@ -14,6 +14,7 @@ import { createTableColumnHelper } from "@/lib/tables"
 import * as Tables from "@/components/tables"
 import { TimestampCell } from "@/components/timestamp"
 import ClipboardButton from "@/components/clipboard-button"
+import ArtifactDownloadButton from "@/components/artifacts/download-button"
 
 const column = createTableColumnHelper<Artifact>()
 
@@ -64,6 +65,18 @@ export function useArtifactTableColumns() {
         header: "Updated",
         cell: (info) => <TimestampCell value={info.getValue()} />,
         sortingFn: "datetime",
+      }),
+      column.id({
+        id: "download",
+        header: "",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <ArtifactDownloadButton
+            artifact={row.original}
+            size="sm"
+            variant="outline"
+          />
+        ),
       }),
     ],
     [],
