@@ -11,6 +11,7 @@ import {
   DefaultPermissionsByRole,
   AllowedPermissionsByRole,
   RequiredPermissionsByRole,
+  isExternalUserCreatePermission,
 } from "@/types/users"
 
 import config from "@/keygen/config"
@@ -167,19 +168,29 @@ export function resolvePermissions(
   raw: readonly string[] | null | undefined,
   role: UserRole | null | undefined,
 ): ReadonlySet<Permission> {
+  let resolved: ReadonlySet<Permission>
+
   if (raw != null) {
     if (raw.includes(WildcardPermission)) {
-      return new Set(role != null ? AllowedPermissionsByRole[role] : [])
+      resolved = new Set(role != null ? AllowedPermissionsByRole[role] : [])
+    } else {
+      resolved = new Set(raw.filter(isPermission))
     }
-
-    return new Set(raw.filter(isPermission))
+  } else if (config.isCE && role != null) {
+    resolved = new Set(DefaultPermissionsByRole[role])
+  } else {
+    resolved = new Set()
   }
 
-  if (config.isCE && role != null) {
-    return new Set(DefaultPermissionsByRole[role])
+  if (role === UserRole.User) {
+    return new Set(
+      [...resolved].filter(
+        (permission) => !isExternalUserCreatePermission(permission),
+      ),
+    )
   }
 
-  return new Set()
+  return resolved
 }
 
 async function effectivePermissions(

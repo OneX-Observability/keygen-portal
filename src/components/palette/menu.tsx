@@ -46,6 +46,7 @@ import {
 import type { AnyResource } from "@/types/api"
 
 import { useCloud } from "@/hooks/use-cloud"
+import { usePermissions } from "@/hooks/use-permissions"
 import { useResourceNavigate } from "@/hooks/use-resource-navigate"
 import {
   useFavorites,
@@ -89,6 +90,7 @@ const NO_COMMAND_SELECTION = "__palette:none"
 
 export default function Menu({ open, onOpenChange }: MenuProps): ReactElement {
   const { isCloud } = useCloud()
+  const { can } = usePermissions()
   const supportEmail = keygen.config.supportEmail
   const commands = useMemo(
     () => buildCommands({ isCloud, supportEmail }),
@@ -108,8 +110,14 @@ export default function Menu({ open, onOpenChange }: MenuProps): ReactElement {
     [commands],
   )
   const newCommands = useMemo(
-    () => commands.filter((c) => c.group === "new"),
-    [commands],
+    () =>
+      commands.filter(
+        (command) =>
+          command.group === "new" &&
+          command.kind === "create" &&
+          can(command.permission),
+      ),
+    [commands, can],
   )
   const accountCommands = useMemo(
     () => commands.filter((c) => c.group === "account"),
@@ -126,8 +134,12 @@ export default function Menu({ open, onOpenChange }: MenuProps): ReactElement {
     () =>
       favoriteIds
         .map((id) => commandsById.get(id))
-        .filter((c): c is Command => c != null),
-    [favoriteIds, commandsById],
+        .filter((c): c is Command => c != null)
+        .filter(
+          (command) =>
+            command.kind !== "create" || can(command.permission),
+        ),
+    [favoriteIds, commandsById, can],
   )
 
   const [screen, setScreen] = useState<Screen>({ kind: "home" })
@@ -283,6 +295,7 @@ export default function Menu({ open, onOpenChange }: MenuProps): ReactElement {
         close()
         return
       case "create":
+        if (!can(command.permission)) return
         close()
         setDialog(command.dialog)
         return

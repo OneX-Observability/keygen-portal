@@ -405,7 +405,6 @@ export const UserPermissions: readonly Permission[] = [
   "arch.read",
   "artifact.read",
   "channel.read",
-  "component.create",
   "component.delete",
   "component.read",
   "component.update",
@@ -419,7 +418,6 @@ export const UserPermissions: readonly Permission[] = [
   "group.users.read",
   "license.check-in",
   "license.check-out",
-  "license.create",
   "license.delete",
   "license.policy.update",
   "license.read",
@@ -430,7 +428,6 @@ export const UserPermissions: readonly Permission[] = [
   "license.users.detach",
   "license.validate",
   "machine.check-out",
-  "machine.create",
   "machine.delete",
   "machine.heartbeat.ping",
   "machine.proofs.generate",
@@ -439,7 +436,6 @@ export const UserPermissions: readonly Permission[] = [
   "package.read",
   "platform.read",
   "policy.read",
-  "process.create",
   "process.delete",
   "process.heartbeat.ping",
   "process.read",
@@ -448,7 +444,6 @@ export const UserPermissions: readonly Permission[] = [
   "release.download",
   "release.read",
   "release.upgrade",
-  "token.generate",
   "token.read",
   "token.regenerate",
   "token.revoke",
@@ -486,6 +481,20 @@ export const SalesAgentDefaultPermissions: readonly Permission[] = [
 export const ReadOnlyDefaultPermissions: readonly Permission[] = [
   ...ReadOnlyPermissions,
 ]
+
+// Permissions that let someone mint new resources. External User role
+// is download/self-serve only; admins keep these.
+export function isExternalUserCreatePermission(
+  permission: Permission,
+): boolean {
+  if (permission === "user.second-factors.create") return false
+  return (
+    permission.endsWith(".create") ||
+    permission.endsWith(".invite") ||
+    permission === "token.generate"
+  )
+}
+
 export const UserDefaultPermissions: readonly Permission[] =
   UserPermissions.filter((p) => !LegacyDefaultUserExclusions.has(p))
 

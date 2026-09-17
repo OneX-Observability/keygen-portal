@@ -128,20 +128,22 @@ export default function Home({
             <ChevronRight className="size-4 text-muted-foreground" />
           </div>
         </CommandItem>
-        <CommandItem
-          value="action:new"
-          keywords={["new", "create"]}
-          highlighted={showNewEnterHint}
-          tabbable
-          onSelect={onOpenNew}
-        >
-          <Plus />
-          <span className="min-w-0 flex-1 truncate">New</span>
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <EnterHint visible={showNewEnterHint} />
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </div>
-        </CommandItem>
+        {newCommands.length > 0 && (
+          <CommandItem
+            value="action:new"
+            keywords={["new", "create"]}
+            highlighted={showNewEnterHint}
+            tabbable
+            onSelect={onOpenNew}
+          >
+            <Plus />
+            <span className="min-w-0 flex-1 truncate">New</span>
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+              <EnterHint visible={showNewEnterHint} />
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </div>
+          </CommandItem>
+        )}
         <CommandItem
           value="action:favorite-page"
           keywords={["favorite", "star", "pin", "bookmark", "page"]}
@@ -225,16 +227,18 @@ export default function Home({
               />
             ))}
           </CommandGroup>
-          <CommandGroup heading="New">
-            {newCommands.map((command) => (
-              <CommandRow
-                key={command.id}
-                command={command}
-                selectedValue={selectedValue}
-                onSelect={() => onCommandSelect(command)}
-              />
-            ))}
-          </CommandGroup>
+          {newCommands.length > 0 && (
+            <CommandGroup heading="New">
+              {newCommands.map((command) => (
+                <CommandRow
+                  key={command.id}
+                  command={command}
+                  selectedValue={selectedValue}
+                  onSelect={() => onCommandSelect(command)}
+                />
+              ))}
+            </CommandGroup>
+          )}
         </>
       )}
 

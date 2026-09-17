@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react"
 
 import type { LicenseFilters } from "@/types/licenses"
-import type { UserFilters } from "@/types/users"
+import type { Permission, UserFilters } from "@/types/users"
 import type { MachineFilters } from "@/types/machines"
 import type { ReleaseFilters } from "@/types/releases"
 import type { ArtifactFilters } from "@/types/artifacts"
@@ -55,7 +55,7 @@ export type Command = CommandBase &
   (
     | { kind: "find"; resource: CommandSearchResource }
     | { kind: "preset"; preset: FilterPreset }
-    | { kind: "create"; dialog: DialogKey }
+    | { kind: "create"; dialog: DialogKey; permission: Permission }
     | { kind: "navigate"; to: string }
     | { kind: "external"; url: string }
     | { kind: "mailto"; email: string }

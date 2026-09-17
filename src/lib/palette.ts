@@ -56,6 +56,7 @@ import { type SearchOperator, type SearchQuery } from "@/types/search"
 
 import { DOCS_URL, DOCS_API_URL } from "@/lib/url"
 import { resourceConfigs, MIN_SEARCH_LENGTH } from "@/lib/search"
+import type { Permission } from "@/types/users"
 
 export const RESOURCE_LABEL: Record<FilterableResource, string> = {
   licenses: "Licenses",
@@ -108,16 +109,47 @@ interface CreateAction {
   key: DialogKey
   label: string
   icon: LucideIcon
+  permission: Permission
 }
 
 const CREATE_ACTIONS: ReadonlyArray<CreateAction> = [
-  { key: DialogKey.License, label: "License", icon: Key },
-  { key: DialogKey.User, label: "User", icon: User },
-  { key: DialogKey.Group, label: "Group", icon: UsersIcon },
-  { key: DialogKey.Policy, label: "Policy", icon: Scroll },
-  { key: DialogKey.Product, label: "Product", icon: Box },
-  { key: DialogKey.Package, label: "Package", icon: Package },
-  { key: DialogKey.Release, label: "Release", icon: Rocket },
+  {
+    key: DialogKey.License,
+    label: "License",
+    icon: Key,
+    permission: "license.create",
+  },
+  { key: DialogKey.User, label: "User", icon: User, permission: "user.create" },
+  {
+    key: DialogKey.Group,
+    label: "Group",
+    icon: UsersIcon,
+    permission: "group.create",
+  },
+  {
+    key: DialogKey.Policy,
+    label: "Policy",
+    icon: Scroll,
+    permission: "policy.create",
+  },
+  {
+    key: DialogKey.Product,
+    label: "Product",
+    icon: Box,
+    permission: "product.create",
+  },
+  {
+    key: DialogKey.Package,
+    label: "Package",
+    icon: Package,
+    permission: "package.create",
+  },
+  {
+    key: DialogKey.Release,
+    label: "Release",
+    icon: Rocket,
+    permission: "release.create",
+  },
 ]
 
 const FILTER_PRESETS: ReadonlyArray<FilterPreset> = [
@@ -253,6 +285,7 @@ export function buildCommands(opts: {
       keywords: ["create", action.label.toLowerCase()],
       kind: "create",
       dialog: action.key,
+      permission: action.permission,
     })
   }
 
