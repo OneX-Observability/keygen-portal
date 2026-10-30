@@ -69,6 +69,18 @@ export default function EditProductForm({
           isPending={updateProduct.isPending}
           submitLabel="Update"
         >
+          <Forms.Field.CardSelector
+            title="Distribution strategy"
+            className="p-0"
+          >
+            <Products.Form.Fields
+              schema="edit"
+              include={["distributionStrategy"]}
+            />
+          </Forms.Field.CardSelector>
+
+          <Separator className="my-8" />
+
           <Forms.Section.Columns title="Attributes">
             <Forms.Section.Column>
               <Products.Form.Fields
