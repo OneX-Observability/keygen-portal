@@ -49,6 +49,7 @@ import {
 } from "lucide-react"
 
 import { Artifact } from "@/types/artifacts"
+import { Product } from "@/types/products"
 import {
   ReleaseStatus,
   ReleaseChannel,
@@ -146,7 +147,13 @@ function ConstraintRow({ constraint }: { constraint: ReleaseConstraint }) {
   )
 }
 
-function ArtifactRow({ artifact }: { artifact: Artifact }) {
+function ArtifactRow({
+  artifact,
+  product,
+}: {
+  artifact: Artifact
+  product: Product | undefined
+}) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between gap-3">
@@ -158,11 +165,18 @@ function ArtifactRow({ artifact }: { artifact: Artifact }) {
           }}
           label={artifact.attributes.filename}
         />
-        <Artifacts.DownloadButton
-          artifact={artifact}
-          size="sm"
-          variant="outline"
-        />
+        <div className="flex items-center gap-2">
+          <Artifacts.PublicLinkButton
+            artifact={artifact}
+            product={product}
+            size="sm"
+          />
+          <Artifacts.DownloadButton
+            artifact={artifact}
+            size="sm"
+            variant="outline"
+          />
+        </div>
       </div>
     </div>
   )
@@ -606,7 +620,11 @@ export default function ReleaseDetails() {
                     </div>
                   ) : artifacts.length > 0 ? (
                     artifacts.map((artifact) => (
-                      <ArtifactRow key={artifact.id} artifact={artifact} />
+                      <ArtifactRow
+                        key={artifact.id}
+                        artifact={artifact}
+                        product={product}
+                      />
                     ))
                   ) : (
                     <span className="px-2 text-sm text-content-subdued">
