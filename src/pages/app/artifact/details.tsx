@@ -52,6 +52,7 @@ import {
 import * as keygen from "@/keygen"
 
 import { useGetRelease } from "@/queries/releases"
+import { useGetProduct } from "@/queries/products"
 import { useGetArtifact, useRemoveArtifact } from "@/queries/artifacts"
 
 import { useMobile } from "@/hooks/use-mobile"
@@ -93,6 +94,8 @@ export default function ArtifactDetails() {
 
   const releaseId = artifact?.relationships.release?.data?.id || ""
   const { data: release } = useGetRelease(releaseId)
+  const productId = release?.relationships.product?.data?.id || ""
+  const { data: product } = useGetProduct(productId)
 
   const back = useBackNavigate()
   const breadcrumbBack = useBreadcrumbBackNavigate()
@@ -186,6 +189,22 @@ export default function ArtifactDetails() {
                     <DropdownMenuSeparator />
                   </>
                 )}
+                {artifact &&
+                  keygen.artifacts.hasPublicUrl(artifact, product) && (
+                    <>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          void copyToClipboard(
+                            keygen.artifacts.publicUrl({ id: artifact.id }),
+                          )
+                        }
+                        className="pb-2 text-base"
+                      >
+                        Copy public link
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                 <Can permission="artifact.update">
                   <DropdownMenuItem
                     onClick={(e) => {
@@ -214,7 +233,13 @@ export default function ArtifactDetails() {
           ) : (
             <div className="flex items-center space-x-2">
               {artifact && (
-                <Artifacts.DownloadButton artifact={artifact} />
+                <>
+                  <Artifacts.PublicLinkButton
+                    artifact={artifact}
+                    product={product}
+                  />
+                  <Artifacts.DownloadButton artifact={artifact} />
+                </>
               )}
               <Can permission="artifact.update">
                 <Button
